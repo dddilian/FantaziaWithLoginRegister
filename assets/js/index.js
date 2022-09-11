@@ -53,9 +53,10 @@
 
     //!4. hash рутер
     function showPage() {
-        let user = userManager.getLoggedUser();
+        // let user = userManager.getLoggedUser();
 
-        if (user) {
+        // if (user) {
+        if (userManager.currentUser) {
             menuLink.style.display = "inline";
             logoutBtn.style.display = "inline";
             cartIconDivEl.style.display = "inline";
@@ -133,7 +134,7 @@
 
 
     function printProducts(products, container) {
-        let user = userManager.getLoggedUser();
+        // let user = userManager.getLoggedUser();
 
         container.innerHTML = "";
 
@@ -177,11 +178,13 @@
                 let count = cardInput.value;
 
                 if (count > 0) {
-                    user.addToCart(product, count)
+                    // user.addToCart(product, count)
+                    userManager.currentUser.addToCart(product, count)
 
-                    orderedProductsCounter.innerText = user.getCountInCart();
+                    // orderedProductsCounter.innerText = user.getCountInCart();
+                    orderedProductsCounter.innerText = userManager.currentUser.getCountInCart();
 
-                    if (user.getCountInCart() > 0) {
+                    if (userManager.currentUser.getCountInCart() > 0) {
                         orderedProductsCounter.style.display = "inline";
                     }
                 }
@@ -199,30 +202,30 @@
 
 
     function renderCartPage() {
-        let user = userManager.getLoggedUser();
-        console.log(user);
+        // let user = userManager.getLoggedUser();
+        // console.log(user);
 
-        if (user.productsInCart.length > 0) {
+        if (userManager.currentUser.productsInCart.length > 0) {
             cartTableEl.style.display = "block";
             noItemsInCartDiv.style.display = "none";
-            populateCartTable(user.productsInCart, cartTableEl);
+            populateCartTable(userManager.currentUser.productsInCart, cartTableEl);
         } else {
             cartTableEl.style.display = "none";
             noItemsInCartDiv.style.display = "block";
         }
 
-        populateOrderHistoryTable(user.orderHistory, orderHistoryTable);
+        populateOrderHistoryTable(userManager.currentUser.orderHistory, orderHistoryTable);
     }
 
     function populateCartTable(cartItems, table) {
-        let user = userManager.getLoggedUser();
+        // let user = userManager.getLoggedUser();
         table.innerHTML = "";
 
         let lastTr = document.createElement("tr");
         let lastTrTd1 = document.createElement("td");
         let lastTrTd2 = document.createElement("td");
         lastTrTd2.id = "totalTd";
-        lastTrTd2.textContent = `Total: ${user.getTotal()} лв.`;
+        lastTrTd2.textContent = `Total: ${userManager.currentUser.getTotal()} лв.`;
         let lastTrTd3 = document.createElement("td");
         lastTrTd3.id = "orderTd";
         let orderLink = document.createElement("a");
@@ -251,8 +254,8 @@
                 priceTd.textContent = item.price * item.orderedCount;
                 item.totalProductValue = item.orderedCount * item.price;
 
-                lastTrTd2.textContent = `Total: ${user.getTotal()}`;
-                orderedProductsCounter.innerText = user.getCountInCart();
+                lastTrTd2.textContent = `Total: ${userManager.currentUser.getTotal()}`;
+                orderedProductsCounter.innerText = userManager.currentUser.getCountInCart();
 
             })
 
@@ -263,11 +266,11 @@
             //delete from cart
             deleteProductBtn.addEventListener("click", function (e) {
 
-                user.deleteProductFromCart(item);
+                userManager.currentUser.deleteProductFromCart(item);
 
                 e.target.parentElement.parentElement.remove();
-                lastTrTd2.textContent = `Total: ${user.getTotal()}`;
-                orderedProductsCounter.innerText = user.getCountInCart();
+                lastTrTd2.textContent = `Total: ${userManager.currentUser.getTotal()}`;
+                orderedProductsCounter.innerText = userManager.currentUser.getCountInCart();
 
                 if (user.productsInCart.length <= 0) {
                     cartTableEl.style.display = "none";
@@ -329,7 +332,7 @@
     //submit order button listener function
     submitBtnOrder.addEventListener("click", function (e) {
         e.preventDefault();
-        let user = userManager.getLoggedUser();
+        // let user = userManager.getLoggedUser();
 
         let newTime = new Date().toLocaleTimeString();
         let newDate = new Date().toLocaleDateString();
@@ -339,20 +342,20 @@
         // let phone = orderForm.phone.value;
         let address = orderForm.address.value;
 
-        let orderedProducts = user.productsInCart.map(el => el.name + " " + el.orderedCount);
+        let orderedProducts = userManager.currentUser.productsInCart.map(el => el.name + " " + el.orderedCount);
 
         let orderObj = {
             dateTime: `${newTime} ${newDate}`,
             address,
             orderedProducts,
-            total: user.getTotal(),
+            total: userManager.currentUser.getTotal(),
         }
 
 
         loginPageEl.style.display = "none";
         registerPageEl.style.display = "none";
-        user.addOrderToHistory(orderObj);
-        userManager.updateUser(user);
+        userManager.currentUser.addOrderToHistory(orderObj);
+        userManager.updateUser(userManager.currentUser);
 
         orderedProductsCounter.textContent = "";
         orderedProductsCounter.style.display = "none";

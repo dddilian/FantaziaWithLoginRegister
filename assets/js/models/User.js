@@ -1,5 +1,5 @@
 class User {
-    constructor(username, password, productInCart, orderHistory) {
+    constructor(username, password, productInCart = [], orderHistory = []) {
         this.username = username;
         this.password = password;
 

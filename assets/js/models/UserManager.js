@@ -5,6 +5,7 @@ let userManager = (function () {
         constructor() {
 
             this.users = [];
+            this.currentUser = undefined;
 
             if (!localStorage.getItem("users")) { //ако няма юзъри в localStorage
                 localStorage.setItem("users", JSON.stringify(defaultUsers)); //сетни default-ните в localStorage
@@ -20,6 +21,10 @@ let userManager = (function () {
             console.log(this.users);
 
 
+            if (localStorage.getItem("currentUser")) {
+                this.currentUser = this.getLoggedUser();
+            }
+
         }
 
         getLoggedUser() {
@@ -27,7 +32,7 @@ let userManager = (function () {
             let loggedUser = JSON.parse(localStorage.getItem("currentUser"));
 
             if (loggedUser) {
-                let user = this.users.find(u => u.username === loggedUser.username);
+                let user = this.getUser(loggedUser.username)
                 user.orderHistory = [
                     ...loggedUser.orderHistory
                 ]
@@ -43,11 +48,25 @@ let userManager = (function () {
         }
 
 
+        // loginUser(username, password) {
+
+        //     if (userManager.validUser(username, password)) {
+        //         let user = this.getUser(username);
+        //         localStorage.setItem("currentUser", JSON.stringify(user));
+
+        //         return true;
+        //     }
+
+        //     return false;
+        // }
+
         loginUser(username, password) {
 
             if (userManager.validUser(username, password)) {
-                let user = this.getUser(username);
-                localStorage.setItem("currentUser", JSON.stringify(user));
+                this.currentUser = this.getUser(username);
+
+                // localStorage.setItem("currentUser", JSON.stringify(user));
+                localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
 
                 return true;
             }
@@ -55,15 +74,20 @@ let userManager = (function () {
             return false;
         }
 
-        //юзъра дали съществува и дали си е въвел паролата правилно
+
+
+
+        //проверка дали вече регистриран юзър си е въвел правилно името и паролата
         validUser(username, password) {
             return this.users.some(user => user.username === username && user.password === password);
         }
 
 
+        //проверка дали юзъра е регистриран
         isRegistered(username) {
             return this.users.some(user => user.username === username);
         }
+
 
         registerUser(username, password) {
             //ако няма такъв user, регистрирай го
@@ -88,6 +112,7 @@ let userManager = (function () {
             // localStorage.setItem('users', JSON.stringify(this.users));
             //след това разкарай юзъра, с който последно е работено
             localStorage.removeItem("currentUser");
+            this.currentUser = undefined;
         }
 
 
