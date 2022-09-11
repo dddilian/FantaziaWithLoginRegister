@@ -272,7 +272,7 @@
                 lastTrTd2.textContent = `Total: ${userManager.currentUser.getTotal()}`;
                 orderedProductsCounter.innerText = userManager.currentUser.getCountInCart();
 
-                if (user.productsInCart.length <= 0) {
+                if (userManager.currentUser.productsInCart.length <= 0) {
                     cartTableEl.style.display = "none";
                     noItemsInCartDiv.style.display = "block";
                 }

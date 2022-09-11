@@ -11,11 +11,12 @@ let userManager = (function () {
                 localStorage.setItem("users", JSON.stringify(defaultUsers)); //сетни default-ните в localStorage
             }
 
-
             JSON.parse(localStorage.getItem("users")).forEach(user => {
 
-                //за да имат всички функции на class User, след десериализация трябва да се вкарат в this.users като обекти от клас User
+                //за да имат всички функции на class User, след десериализация трябва да се вкарат в this.users, като обекти от клас User
                 this.users.push(new User(...Object.values(user)));
+
+                //this.users.push(user); //или пък да се вкара като class User само currentUser
             });
 
             console.log(this.users);
@@ -36,7 +37,9 @@ let userManager = (function () {
                 user.orderHistory = [
                     ...loggedUser.orderHistory
                 ]
+
                 return user;
+                //return new User(...Object.values(user)); //или пък да се вкара като class User само currentUser
             }
 
             return false;
@@ -48,24 +51,13 @@ let userManager = (function () {
         }
 
 
-        // loginUser(username, password) {
-
-        //     if (userManager.validUser(username, password)) {
-        //         let user = this.getUser(username);
-        //         localStorage.setItem("currentUser", JSON.stringify(user));
-
-        //         return true;
-        //     }
-
-        //     return false;
-        // }
-
         loginUser(username, password) {
 
             if (userManager.validUser(username, password)) {
-                this.currentUser = this.getUser(username);
 
-                // localStorage.setItem("currentUser", JSON.stringify(user));
+                this.currentUser = this.getUser(username);
+                //this.currentUser = new User(...Object.values(this.getUser(username))); //или пък да се вкара като class User само currentUser
+
                 localStorage.setItem("currentUser", JSON.stringify(this.currentUser));
 
                 return true;
@@ -73,8 +65,6 @@ let userManager = (function () {
 
             return false;
         }
-
-
 
 
         //проверка дали вече регистриран юзър си е въвел правилно името и паролата
@@ -88,7 +78,7 @@ let userManager = (function () {
             return this.users.some(user => user.username === username);
         }
 
-
+        
         registerUser(username, password) {
             //ако няма такъв user, регистрирай го
             if (!this.isRegistered(username)) {
