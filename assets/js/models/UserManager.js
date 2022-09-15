@@ -34,9 +34,9 @@ let userManager = (function () {
 
             if (loggedUser) {
                 let user = this.getUser(loggedUser.username)
-                user.orderHistory = [
-                    ...loggedUser.orderHistory
-                ]
+                // user.orderHistory = [
+                //     ...loggedUser.orderHistory
+                // ]
 
                 return user;
                 //return new User(...Object.values(user)); //или пък да се вкара като class User само currentUser
