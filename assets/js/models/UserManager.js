@@ -8,7 +8,7 @@ let userManager = (function () {
             this.currentUser = undefined;
 
             if (!localStorage.getItem("users")) { //ако няма юзъри в localStorage
-                localStorage.setItem("users", JSON.stringify(defaultUsers)); //сетни default-ните в localStorage
+                localStorage.setItem("users", JSON.stringify(defaultUsers)); //сетни default-ните в localStorage. defaultUsers идват от js файла, в който има масив с user-и в JSON формат
             }
 
             JSON.parse(localStorage.getItem("users")).forEach(user => {
@@ -23,7 +23,7 @@ let userManager = (function () {
 
 
             if (localStorage.getItem("currentUser")) {
-                this.currentUser = this.getLoggedUser();
+                this.currentUser = this.getLoggedUser(); //тук реално получаваме намерения user от this.users
             }
 
         }
@@ -34,7 +34,7 @@ let userManager = (function () {
 
             if (loggedUser) {
                 let user = this.getUser(loggedUser.username)
-                // user.orderHistory = [
+                // user.orderHistory = [ //вече е излишно
                 //     ...loggedUser.orderHistory
                 // ]
 
@@ -51,7 +51,7 @@ let userManager = (function () {
         }
 
 
-        loginUser(username, password) {
+        loginUser(username, password) { //вика се в login controller
 
             if (userManager.validUser(username, password)) {
 
@@ -78,8 +78,8 @@ let userManager = (function () {
             return this.users.some(user => user.username === username);
         }
 
-        
-        registerUser(username, password) {
+
+        registerUser(username, password) { //вика се в register controller
             //ако няма такъв user, регистрирай го
             if (!this.isRegistered(username)) {
 
@@ -92,14 +92,19 @@ let userManager = (function () {
             return false;
         }
 
+        //това се вика всеки път, когато на текущо логнатия юзър се прави някаква промяна по пропъртитата му от някой контролер, различен от login и register
+        //в текущия контролер му се подава userManager.currentUser
         updateUser(user) {
             localStorage.setItem("currentUser", JSON.stringify(user));
             localStorage.setItem('users', JSON.stringify(this.users));
         }
 
         logout() {
+            //!в момента долното закоментирано е излишно, защото където правим промени, веднага викаме updateUser, така че при изход винаги
+            //е сигурно, че всички промени са вече записани
             //презапиши всички юзъри в localStorage, заедно с последно модифицирания, за да може да се запази актуалното му състояние
             // localStorage.setItem('users', JSON.stringify(this.users));
+            
             //след това разкарай юзъра, с който последно е работено
             localStorage.removeItem("currentUser");
             this.currentUser = undefined;
