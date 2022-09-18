@@ -31,7 +31,6 @@
     let cartIconDivEl = document.getElementById("cartIconDiv");
 
 
-
     window.addEventListener("load", showPage);
     window.addEventListener("hashchange", showPage);
 
@@ -53,9 +52,7 @@
 
     //!4. hash рутер
     function showPage() {
-        // let user = userManager.getLoggedUser();
-
-        // if (user) {
+    
         if (userManager.currentUser) {
             menuLink.style.display = "inline";
             logoutBtn.style.display = "inline";
@@ -134,7 +131,6 @@
 
 
     function printProducts(products, container) {
-        // let user = userManager.getLoggedUser();
 
         container.innerHTML = "";
 
@@ -202,9 +198,7 @@
 
 
     function renderCartPage() {
-        // let user = userManager.getLoggedUser();
-        // console.log(user);
-
+       
         if (userManager.currentUser.productsInCart.length > 0) {
             cartTableEl.style.display = "block";
             noItemsInCartDiv.style.display = "none";
@@ -218,7 +212,7 @@
     }
 
     function populateCartTable(cartItems, table) {
-        // let user = userManager.getLoggedUser();
+    
         table.innerHTML = "";
 
         let lastTr = document.createElement("tr");
@@ -262,7 +256,6 @@
             let deleteProductBtn = document.createElement("button");
             deleteProductBtn.textContent = "X";
 
-
             //delete from cart
             deleteProductBtn.addEventListener("click", function (e) {
 
@@ -287,17 +280,13 @@
 
         })
 
-
         lastTrTd3.append(orderLink);
 
         lastTr.append(lastTrTd1, lastTrTd2, lastTrTd3);
 
         table.append(lastTr);
 
-
-
     }
-
 
     function populateOrderHistoryTable(orders, table) {
 
@@ -332,7 +321,6 @@
     //submit order button listener function
     submitBtnOrder.addEventListener("click", function (e) {
         e.preventDefault();
-        // let user = userManager.getLoggedUser();
 
         let newTime = new Date().toLocaleTimeString();
         let newDate = new Date().toLocaleDateString();

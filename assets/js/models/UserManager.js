@@ -7,46 +7,32 @@ let userManager = (function () {
             this.users = [];
             this.currentUser = undefined;
 
-            if (!localStorage.getItem("users")) { //ако няма юзъри в localStorage
-                localStorage.setItem("users", JSON.stringify(defaultUsers)); //сетни default-ните в localStorage. defaultUsers идват от js файла, в който има масив с user-и в JSON формат
+            //!ако няма юзъри в localStorage - вземи дефолтните и ги сетни в localStorage
+            if (!localStorage.getItem("users")) {
+                localStorage.setItem("users", JSON.stringify(defaultUsers));
             }
 
+            //!вземи юзърите от localStorage и всеки от тях го превърни в User и го набутай в this.users
             JSON.parse(localStorage.getItem("users")).forEach(user => {
 
-                //за да имат всички функции на class User, след десериализация трябва да се вкарат в this.users, като обекти от клас User
                 this.users.push(new User(...Object.values(user)));
 
                 //this.users.push(user); //или пък да се вкара като class User само currentUser
             });
 
-            console.log(this.users);
+            // console.log(this.users);
 
-
+            //!ако има текущо логнат юзър в localStorage - вземи го чрез 
             if (localStorage.getItem("currentUser")) {
-                this.currentUser = this.getLoggedUser(); //тук реално получаваме намерения user от this.users
+               
+                let userInLocalStorage = JSON.parse(localStorage.getItem("currentUser"));
+                this.currentUser = this.getUser(userInLocalStorage.username);
             }
 
         }
 
         getUser(username) {
             return this.users.find(u => u.username === username);
-        }
-
-        getLoggedUser() {
-
-            let loggedUser = JSON.parse(localStorage.getItem("currentUser"));
-
-            if (loggedUser) {
-                let user = this.getUser(loggedUser.username)
-                // user.orderHistory = [ //вече е излишно
-                //     ...loggedUser.orderHistory
-                // ]
-
-                return user;
-                //return new User(...Object.values(user)); //или пък да се вкара като class User само currentUser
-            }
-
-            return false;
         }
 
 
