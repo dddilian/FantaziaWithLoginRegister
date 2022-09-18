@@ -28,6 +28,10 @@ let userManager = (function () {
 
         }
 
+        getUser(username) {
+            return this.users.find(u => u.username === username);
+        }
+
         getLoggedUser() {
 
             let loggedUser = JSON.parse(localStorage.getItem("currentUser"));
@@ -43,11 +47,6 @@ let userManager = (function () {
             }
 
             return false;
-        }
-
-
-        getUser(username) {
-            return this.users.find(u => u.username === username);
         }
 
 
@@ -104,7 +103,7 @@ let userManager = (function () {
             //е сигурно, че всички промени са вече записани
             //презапиши всички юзъри в localStorage, заедно с последно модифицирания, за да може да се запази актуалното му състояние
             // localStorage.setItem('users', JSON.stringify(this.users));
-            
+
             //след това разкарай юзъра, с който последно е работено
             localStorage.removeItem("currentUser");
             this.currentUser = undefined;
